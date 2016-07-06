@@ -1,0 +1,125 @@
+<html>
+  <head>
+    <title>Protease Interaction Map</title>
+    <link rel="stylesheet" type="text/css" href="couplings.css">
+    <script type="text/javascript" src="d3.v2.chordfix.js"></script>
+    <script type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script type="text/javascript"
+      src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript"
+      src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="coupling_map.js"></script>
+  </head>
+  <body>
+
+    <div id="container">
+      <div class="heading">
+        <h1 class="title">Interaction map of PI-experienced
+          <br>HIV-1 subtype B Protease sequences</h1>
+      </div>
+      <div id="button-container">
+        <button id="wildtype-button">Wildtype Sequence</button>
+        <button id="mutant1-button">Likely Variant</button>
+        <button id="mutant2-button">Unlikely Variant</button>
+        <button id="mutant3-button">Random Varient</button>
+      </div>
+
+      <div id="chart_placeholder"></div>
+
+      <div id="info">
+        <hr>
+        <p class="descript">
+          In the context of probabilistic modeling of protein sequences, the
+          concept of residue-residue interactions, or couplings between each
+          residue and every other residue, becomes important.  In our modeling,
+          the sum total of all these interactions acting in concert are
+          predictive of the fitness of an individual sequence.
+          <br><br>
+          Here we provide
+          a qualitative map of the interaction network given 3 specific
+          sequences: the wildtype sequebce, a likely mutant sequence, and an
+          unlikely mutant sequence.
+          <br><br>
+          Click a button above to display a map of the sequence-specific
+          residue-residue interactions!
+        </p>
+        <hr>
+        <p>
+          Arcs shown in <b id='blue'>blue</b> represent favorable interactions.
+          <br>
+          Arcs shown in <b id='red'>red</b> represent unfavorable interactions.
+          <br>
+          Positions shown in <b id='orange'>orange</b> indicate amino acid
+          substitutions.
+        </p>
+        <p>
+          Overall, the more <b id='red'>red</b> represents lower fitness <br>and a
+          more frustrated protein.
+        </p>
+        <p>
+          Hover over a single sequence position around the perimeter (gray or
+          black) to reveal just the interactions with that position.
+        </p>
+        <p>
+          Residue positions without any couplings are likely highly conserved or
+          too "gappy" to model properly (1-5, 99).
+        </p>
+      </div>
+      <pre id="wildtype">
+        The wildtype sequence is overall minimally frustrated, showing mostly
+        favorable interactions across all pairs.
+      </pre>
+      <pre id="likely">
+        The introduction of several protease inhibitor (PI)- associated
+        mutations makes the landscape of interactions slightly less favorable
+        than the wildtype, but overall still very favorable.
+      </pre>
+      <pre id="unlikely">
+        When the same number of mutations is introduced at a different
+        combination of PI-associated positions, the network of interactions
+        becomes very frustrated and this sequence is very much less likely to
+        be observed.
+      </pre>
+      <pre id="random">
+        Just for fun, here is a randomly generated sequence which shows how
+        frustrated a randomly generated network of this size can be.
+      </pre>
+    </div>
+    <script>
+      d3.select("#wildtype-button").on("click", function () {
+          disableAllButtons();
+          callInitOnce();
+          updateChords( "data/protease-couplings-wt.json" );
+          disableButton(this);
+          enableTextSection("#wildtype");
+      });
+
+      d3.select("#mutant1-button").on("click", function() {
+          disableAllButtons();
+          callInitOnce();
+          updateChords( "data/protease-couplings-mut1.json" );
+          disableButton(this);
+          enableTextSection("#likely");
+      });
+
+      d3.select("#mutant2-button").on("click", function() {
+          disableAllButtons();
+          callInitOnce();
+          updateChords( "data/protease-couplings-mut2.json" );
+          disableButton(this);
+          enableTextSection("#unlikely");
+      });
+
+      d3.select("#mutant3-button").on("click", function() {
+          disableAllButtons();
+          callInitOnce();
+          updateChords( "data/protease-couplings-rand.json" );
+          disableButton(this);
+          enableTextSection("#random");
+      });
+
+      initButtons();
+    </script>
+  </body>
+</html>
